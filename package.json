@@ -1,0 +1,20 @@
+{
+  "name": "messenger-webhook",
+  "version": "1.0.0",
+  "description": "Webhook to setup messenger bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Apoorva",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "engines": {
+    "node": "11.x"
+  }
+}

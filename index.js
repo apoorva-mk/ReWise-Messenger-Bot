@@ -47,24 +47,20 @@ app.post('/webhook', (req, res) => {
       let webhook_event = entry.messaging[0];
       console.log(webhook_event);
 
-
       // Get the sender PSID
       let sender_psid = webhook_event.sender.id;
       console.log('Sender PSID: ' + sender_psid);
 
-      user_state = getUserState(sender_psid);
-      console.log("The user state is"+user_state);
-
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
       if (webhook_event.message) {
-        handleMessage(sender_psid, webhook_event.message);        
+        getUserState(sender_psid);
+        //handleMessage(sender_psid, webhook_event.message);        
       } else if (webhook_event.postback) {
         handlePostback(sender_psid, webhook_event.postback);
       }
       
     });
-
     // Returns a '200 OK' response to all requests
     res.status(200).send('EVENT_RECEIVED');
   } else {
@@ -163,11 +159,12 @@ function getUserState(sender_psid){
     else {
       console.log("Old user");
       console.log(rows[0].psid+" "+rows[0].state+" "+rows[0].quiz_state);
-      continueInteraction(sender_psid, rows[0].state);
+      continueInteraction(sender_psid, rows[0].state, 1);
     }    
   });
 }
 
+//Create a response with a given text
 function createResponse(content){
   let response;
     // Create the payload for a basic text message
@@ -178,16 +175,30 @@ function createResponse(content){
   return response;
 }
 
+
+//Greeting new users
 function greetUser(sender_psid){
   console.log("Greeting user");
   response = createResponse(process.env.INTRO_TEXT);
   callSendAPI(sender_psid, response);
+  continueInteraction(sender_psid, "0");
 }
 
-function continueInteraction(sender_psid, state){
+//Continuing interaction with old users
+function continueInteraction(sender_psid, state, welcome_flag=0){
   if(state=='0'){
     console.log("State 0");
-    response = createResponse(process.env.WELCOME_BACK);
+    welcome = "";
+    if (flag == 1){
+      welcome="Hey there, welcome back to Rewise!"
+    }
+    response = createResponse(welcome+process.env.WELCOME_BACK);
     callSendAPI(sender_psid, response);
   }
+
+}
+
+//update the users state
+function updateState(sender_psid, new_state){
+  db.run("UPDATE users SET state="+new_state+"where psid='"+sender_psid+"'");
 }

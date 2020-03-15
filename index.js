@@ -4,7 +4,31 @@ app = express().use(bodyParser.json());
 require('dotenv').config()
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const request = require('request');
+const sqlite3 = require('sqlite3').verbose();
+
+
+//Start process
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+file_path = process.env.DB_FILE_NAME
+
+
+//Creating a database and table
+let db = new sqlite3.Database(file_path, (err) => { 
+  if (err) { 
+      console.log('Error when creating the database', err) 
+  } else { 
+      console.log('Database created!, path: "./mydb.sqlite3"') 
+      createTable()
+  } 
+})
+
+
+//creating a table to hold state
+const createTable = () => {
+  console.log("Create table 'users' in database");
+  db.run("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, psid TEXT, state TEXT, quiz_state TEXT)");
+}
+
 
 app.post('/webhook', (req, res) => {  
  
@@ -119,4 +143,19 @@ function callSendAPI(sender_psid, response) {
     }
   }); 
   
+}
+
+
+function getUserState(sender_psid){
+
+  db.all("SELECT * from users where psid="+sender_psid,function(err,rows){
+    if(err){
+      db.run("INSERT into users (psid,state,quiz_state) VALUES ("+sender_psid+",'0','0')");
+      return -1;
+    }
+    else{
+      console.log(row.psid+" "+row.state+" "+row.quiz_state);
+      return row.state;
+    }    
+  });
 }

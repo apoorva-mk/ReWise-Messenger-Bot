@@ -154,7 +154,7 @@ function getUserState(sender_psid){
     console.log(rows);
     if(typeof rows == 'undefined'){
       console.log("User not saved, saving new user");
-      db.run("INSERT into users (psid,state,quiz_state) VALUES ("+sender_psid+",'0','0')");
+      db.run("INSERT into users (psid,state,quiz_state) VALUES ('"+sender_psid+"','0','0')");
       return -1;
     }
     else {

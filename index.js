@@ -152,12 +152,12 @@ function callSendAPI(sender_psid, response) {
 function getUserState(sender_psid){
 
   db.all("SELECT * from users where psid="+sender_psid,function(err,rows){
-    if(err){
+    if(typeof rows !== 'undefined'){
       console.log("Users not saved, saving new user");
       db.run("INSERT into users (psid,state,quiz_state) VALUES ("+sender_psid+",'0','0')");
       return -1;
     }
-    else{
+    else {
       console.log("Old user");
       console.log(rows.psid+" "+rows.state+" "+rows.quiz_state);
       return rows.state;

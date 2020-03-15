@@ -49,6 +49,9 @@ app.post('/webhook', (req, res) => {
       let sender_psid = webhook_event.sender.id;
       console.log('Sender PSID: ' + sender_psid);
 
+      user_state = getUserState(sender_psid);
+      console.log("The user state is"+user_state);
+
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
       if (webhook_event.message) {
@@ -150,10 +153,12 @@ function getUserState(sender_psid){
 
   db.all("SELECT * from users where psid="+sender_psid,function(err,rows){
     if(err){
+      console.log("Users not saved, saving new user");
       db.run("INSERT into users (psid,state,quiz_state) VALUES ("+sender_psid+",'0','0')");
       return -1;
     }
     else{
+      console.log("Old user");
       console.log(row.psid+" "+row.state+" "+row.quiz_state);
       return row.state;
     }    

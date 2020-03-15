@@ -151,6 +151,7 @@ function callSendAPI(sender_psid, response) {
 
 function getUserState(sender_psid){
   db.all("SELECT * from users where psid='"+sender_psid+"'",function(err,rows){
+    console.log(rows);
     if(typeof rows == 'undefined'){
       console.log("User not saved, saving new user");
       db.run("INSERT into users (psid,state,quiz_state) VALUES ("+sender_psid+",'0','0')");

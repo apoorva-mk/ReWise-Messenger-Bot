@@ -189,7 +189,7 @@ function continueInteraction(sender_psid, state, welcome_flag=0){
   if(state=='0'){
     console.log("State 0");
     welcome = "";
-    if (flag == 1){
+    if (welcome_flag == 1){
       welcome="Hey there, welcome back to Rewise!"
     }
     response = createResponse(welcome+process.env.WELCOME_BACK);

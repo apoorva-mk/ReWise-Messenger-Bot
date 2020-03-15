@@ -160,7 +160,7 @@ function getUserState(sender_psid){
     else{
       console.log("Old user");
       console.log(rows.psid+" "+rows.state+" "+rows.quiz_state);
-      return row.state;
+      return rows.state;
     }    
   });
 }

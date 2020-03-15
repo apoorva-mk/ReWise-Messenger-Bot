@@ -29,9 +29,9 @@ const createTable = () => {
   db.run("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, psid TEXT, state TEXT, quiz_state TEXT)");
 }
 
-v = getUserState(1);
-v = getUserState(1);
-console.log(v);
+// v = getUserState(1);
+// //v = getUserState(1);
+// console.log(v);
 
 app.post('/webhook', (req, res) => {  
  
@@ -164,7 +164,6 @@ function getUserState(sender_psid){
       console.log("Old user");
       console.log(rows[0].psid+" "+rows[0].state+" "+rows[0].quiz_state);
       continueInteraction(sender_psid, rows[0].state);
-      return rows.state;
     }    
   });
 }
@@ -180,18 +179,15 @@ function createResponse(content){
 }
 
 function greetUser(sender_psid){
-  // let response;
-  //   // Create the payload for a basic text message
-  //   response = {
-  //     "text": process.env.INTRO_TEXT
-  //   } 
+  console.log("Greeting user");
   response = createResponse(process.env.INTRO_TEXT);
-  callSendAPI(sender_psid, response);
+  //callSendAPI(sender_psid, response);
 }
 
 function continueInteraction(sender_psid, state){
   if(state=='0'){
+    console.log("State 0");
     response = createResponse(process.env.WELCOME_BACK);
-    callSendAPI(sender_psid, response);
+    //callSendAPI(sender_psid, response);
   }
 }

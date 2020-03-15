@@ -29,6 +29,9 @@ const createTable = () => {
   db.run("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, psid TEXT, state TEXT, quiz_state TEXT)");
 }
 
+v = getUserState(1);
+v = getUserState(1);
+console.log(v);
 
 app.post('/webhook', (req, res) => {  
  
@@ -152,15 +155,43 @@ function callSendAPI(sender_psid, response) {
 function getUserState(sender_psid){
   db.all("SELECT * from users where psid='"+sender_psid+"'",function(err,rows){
     console.log(rows);
-    if(typeof rows == 'undefined'){
+    if(rows.length == 0){
       console.log("User not saved, saving new user");
       db.run("INSERT into users (psid,state,quiz_state) VALUES ('"+sender_psid+"','0','0')");
-      return -1;
+      greetUser(sender_psid);
     }
     else {
       console.log("Old user");
-      console.log(rows.psid+" "+rows.state+" "+rows.quiz_state);
+      console.log(rows[0].psid+" "+rows[0].state+" "+rows[0].quiz_state);
+      continueInteraction(sender_psid, rows[0].state);
       return rows.state;
     }    
   });
+}
+
+createResponse(content){
+  let response;
+    // Create the payload for a basic text message
+    response = {
+      "text": content
+    } 
+
+  return response;
+}
+
+function greetUser(sender_psid){
+  // let response;
+  //   // Create the payload for a basic text message
+  //   response = {
+  //     "text": process.env.INTRO_TEXT
+  //   } 
+  response = createResponse(process.env.INTRO_TEXT);
+  callSendAPI(sender_psid, response);
+}
+
+function continueInteraction(sender_psid, state){
+  if(state=='0'){
+    response = createResponse(process.env.WELCOME_BACK);
+    callSendAPI(sender_psid, response);
+  }
 }

@@ -168,7 +168,7 @@ function getUserState(sender_psid){
   });
 }
 
-function createResponseandSend(content){
+function createResponse(content){
   let response;
     // Create the payload for a basic text message
     response = {

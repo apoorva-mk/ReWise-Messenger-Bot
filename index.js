@@ -168,7 +168,7 @@ function getUserState(sender_psid){
   });
 }
 
-function createResponse(content){
+function createResponseandSend(content){
   let response;
     // Create the payload for a basic text message
     response = {
@@ -181,13 +181,13 @@ function createResponse(content){
 function greetUser(sender_psid){
   console.log("Greeting user");
   response = createResponse(process.env.INTRO_TEXT);
-  //callSendAPI(sender_psid, response);
+  callSendAPI(sender_psid, response);
 }
 
 function continueInteraction(sender_psid, state){
   if(state=='0'){
     console.log("State 0");
     response = createResponse(process.env.WELCOME_BACK);
-    //callSendAPI(sender_psid, response);
+    callSendAPI(sender_psid, response);
   }
 }

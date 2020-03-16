@@ -68,6 +68,7 @@ app.post('/webhook', (req, res) => {
         console.log(webhook_event.message.attachments);
         console.log(webhook_event.message.attachments[0].payload.sticker_id);
         if(webhook_event.message.attachments[0].payload.sticker_id == 369239263222822){
+          console.log("Recieved thumbs up sticker")
           continue1(sender_psid, webhook_event.message);
         }
         else{
@@ -297,10 +298,5 @@ function saveText(base64encoding, sender_psid){
 }
 
 function continue1(sender_psid, message){
-  if(message.text){
-    if(message.text=="Hello"){
-      console.log("In state 2");
-      updateState(sender_psid, "2");
-    }
-  }
+  console.log("Moving to state 2");
 }

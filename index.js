@@ -481,11 +481,13 @@ function checkAnswer(sender_psid, answer){
       if(corr_ans.toUpperCase() === answer.toUpperCase()){
         user_answers.push("Correct");
         score = score+1;
+        console.log("Correct answer");
       }
       else{
         user_answers.push("Incorrect --> "+corr_ans);
+        console.log("Incorrect answer");
       }
-      db.run("UPDATE questions SET score="+score+", user_answers='"+JSON.stringify(user_answers)+"'where psid='"+sender_psid+"'");
+      db.run("UPDATE questions SET score="+score+", user_answers='"+JSON.stringify(user_answers)+"' where psid='"+sender_psid+"'");
       if(rows[0].curr_question > rows[0].total_questions){
         displayReport(sender_psid, score, user_answers);
       }

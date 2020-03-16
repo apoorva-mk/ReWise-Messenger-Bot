@@ -397,7 +397,7 @@ function sendButtonMenu(sender_psid){
 }
 
 function getQuestions(content, psid, follow_up, callback){
-
+  console.log("Generating questions");
   var config = {
       headers: {
           'Content-Type': 'text/plain',

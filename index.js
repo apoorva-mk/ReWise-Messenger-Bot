@@ -225,7 +225,7 @@ function getUserState(sender_psid, message){
 
       else if(rows[0].state=="5"){
         console.log("Sending email");
-        sendEmail(message.text);
+        sendEmail(sender_psid, message.text);
       }
     }    
   });
@@ -550,7 +550,9 @@ function getEmail(sender_psid){
   callSendAPI(resp);
 }
 
-function sendEmail(email){
+function sendEmail(sender_id, email){
   console.log("Sending files to email address");
   sendAttachments.sendAttachments(email);
+  resp=createResponse("The files have been sent to your email address");
+  callSendAPI(sender_id, resp)
 }

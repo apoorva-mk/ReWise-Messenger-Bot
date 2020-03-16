@@ -143,7 +143,8 @@ function handlePostback(sender_psid, received_postback) {
     console.log("Moving to state 3, quiz starting");
     updateState(sender_psid, "3");
     resp = createResponse("Take a deep breath, the quiz is about to start.")
-    callSendAPI(sender_psid, resp);
+    callSendAPI(sender_psid, resp, 3);
+    //displayQuestion(sender_psid);
   }
   else{
     console.log("Moving to state 4");
@@ -176,6 +177,9 @@ function callSendAPI(sender_psid, response, follow_up=0) {
 
       else if (follow_up ==2){
         sendButtonMenu(sender_psid);
+      }
+      else if (follow_up == 3){
+        displayQuestion(sender_psid);
       }
     } else {
       console.error("Unable to send message:" + err);
@@ -421,6 +425,7 @@ function getQuestions(content, sender_psid, follow_up, callback){
         corr_ans.push(obj.Answer);
       }
       console.log(ques,corr_ans, JSON.stringify(ques));
+      db.run("UPDATE questions SET questions="+JSON.stringify(ques)+", correct_answers="+JSON.stringify(corr_ans)+",total_questions="+ques.length+" where psid='"+sender_psid+"'");
       res = createResponse(process.env.WAIT);
       callback(sender_psid, res, follow_up);
 
@@ -430,4 +435,8 @@ function getQuestions(content, sender_psid, follow_up, callback){
       callback(sender_psid, res);
       console.log(error);
   });
+}
+
+function displayQuestion(sender_psid){
+
 }

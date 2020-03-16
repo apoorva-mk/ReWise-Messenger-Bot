@@ -138,7 +138,16 @@ function handleMessage(sender_psid, received_message) {
 
 // Handles messaging_postbacks events
 function handlePostback(sender_psid, received_postback) {
-
+  if(received_postback.payload=="3"){
+    console.log("Moving to state 3, quiz starting");
+    updateState(sender_psid, "3");
+    resp = createResponse("Take a deep breath, the quiz is about to start.")
+    callSendAPI(sender_psid, resp);
+  }
+  else{
+    console.log("Moving to state 4");
+    updateState(sender_psid, "4");
+  }
 }
 
 // Sends response messages via the Send API
@@ -162,6 +171,10 @@ function callSendAPI(sender_psid, response, follow_up=0) {
       console.log('message sent!')
       if(follow_up == 1){
         continueInteraction0(sender_psid, "0");
+      }
+
+      else if (follow_up ==2){
+        sendButtonMenu(sender_psid);
       }
     } else {
       console.error("Unable to send message:" + err);
@@ -236,6 +249,7 @@ function updateState(sender_psid, new_state){
 function reset(sender_psid){
   //TO DO
   console.log("Reset the user state to 0");
+  updateState(sender_psid, "0");
 }
 
 
@@ -323,7 +337,9 @@ function continue1(sender_psid, message){
       else{
         console.log("Creating quiz");
         updateState(sender_psid, "2");
-        sendButtonMenu(sender_psid);
+        //res = createResponse(process.env.WAIT);
+        getQuestions(rows[0].content, sender_psid, 2, callSendAPI);
+        //sendButtonMenu(sender_psid);
       }
     }
   });
@@ -378,4 +394,27 @@ function sendButtonMenu(sender_psid){
       console.error("Unable to send message:" + err);
     }
   }); 
+}
+
+function getQuestions(content, psid, follow_up, callback){
+
+  var config = {
+      headers: {
+          'Content-Type': 'text/plain',
+          'Authorization': `Basic ${process.env.AUTH_TOKEN}`
+      },
+    responseType: 'json'
+  };
+  axios.post(process.env.QUIZ_URL, content, config)
+  .then(function(response) {
+      console.log(response);
+      res = createResponse(process.env.WAIT);
+      callback(sender_psid, res, follow_up);
+  })
+  .catch(function(error) {
+      res = createResponse(process.env.ERR_Q);
+      callback(sender_psid, res);
+      console.log(error);
+  });
+    
 }

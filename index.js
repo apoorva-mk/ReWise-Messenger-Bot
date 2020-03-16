@@ -438,5 +438,16 @@ function getQuestions(content, sender_psid, follow_up, callback){
 }
 
 function displayQuestion(sender_psid){
+  console.log("In display question");
+
+  db.all("SELECT * from questions where psid='"+sender_psid+"'",function(err,rows){
+    console.log(rows);
+    if(rows.length==0){
+      console.log("Some error occurred while fetching question number");
+    }
+    else{
+      console.log("Ready to display question ", rows[0].curr_question);
+    }
+  });
 
 }

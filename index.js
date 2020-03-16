@@ -486,7 +486,7 @@ function checkAnswer(sender_psid, answer){
         console.log("Correct answer");
       }
       else{
-        user_answers.push("Incorrect --> "+corr_ans);
+        user_answers.push("Incorrect --> "+corr_answer);
         console.log("Incorrect answer");
       }
       db.run("UPDATE questions SET score="+score+", user_answers='"+JSON.stringify(user_answers)+"' where psid='"+sender_psid+"'");

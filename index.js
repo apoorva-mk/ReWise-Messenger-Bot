@@ -423,14 +423,13 @@ function getQuestions(content, sender_psid, follow_up, callback){
       console.log(response.data.Data);
       console.log(".....................................................")
       var ques = [];
-      var corr_ans = []
-      var user_ans = [];
+      var corr_ans = [];
       var obj;
       for ( obj of response.data.Data.recall){
         ques.push(obj.Question);
         corr_ans.push(obj.Answer);
 
-        if(ques.len==5){
+        if(ques.length==5){
           break;
         }
       }
@@ -474,20 +473,20 @@ function checkAnswer(sender_psid, answer){
     }
     else{
       console.log("Inside checking answers");
-      // answers = JSON.parse(rows[0].correct_answers);
-      // user_answers = JSON.parse(rows[0].user_answers);
-      // corr_answer = answers[rows[0].curr_question-1];
-      // score = rows[0].score;
-      // console.log("Going to check answer");
-      // if(corr_ans.toUpperCase() === answer.toUpperCase()){
-      //   user_answers.push("Correct");
-      //   score = score+1;
-      //   console.log("Correct answer");
-      // }
-      // else{
-      //   user_answers.push("Incorrect --> "+corr_ans);
-      //   console.log("Incorrect answer");
-      // }
+      answers = JSON.parse(rows[0].correct_answers);
+      user_answers = JSON.parse(rows[0].user_answers);
+      corr_answer = answers[rows[0].curr_question-1];
+      score = rows[0].score;
+      console.log("Going to check answer");
+      if(corr_ans.toUpperCase() === answer.toUpperCase()){
+        user_answers.push("Correct");
+        score = score+1;
+        console.log("Correct answer");
+      }
+      else{
+        user_answers.push("Incorrect --> "+corr_ans);
+        console.log("Incorrect answer");
+      }
       // db.run("UPDATE questions SET score="+score+", user_answers='"+JSON.stringify(user_answers)+"' where psid='"+sender_psid+"'");
       // if(rows[0].curr_question > rows[0].total_questions){
       //   displayReport(sender_psid, score, user_answers);

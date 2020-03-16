@@ -192,7 +192,7 @@ function getUserState(sender_psid, message){
       console.log("User not saved, saving new user");
       db.run("INSERT into users (psid,state,quiz_state) VALUES ('"+sender_psid+"','0','0')");
       db.run("INSERT into contents (psid, content) VALUES ('"+sender_psid+"','')");
-      db.run("INSERT into questions (psid, curr_question, questions, correct_answers, user_answers, total_questions, score) VALUES ('"+sender_psid+"',0,'','','',0,0");
+      db.run("INSERT into questions (psid, curr_question, questions, correct_answers, user_answers, total_questions, score) VALUES ('"+sender_psid+"',0,'','','',0,0)");
       console.log("Saved all the initial details of user");
       greetUser(sender_psid);
     }

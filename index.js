@@ -206,6 +206,7 @@ function continueInteraction(sender_psid, state, welcome_flag=0){
     }
     response = createResponse(welcome+process.env.WELCOME_BACK);
     callSendAPI(sender_psid, response);
+    updateState(sender_psid, "1");
   }
 
 }
@@ -217,7 +218,7 @@ function updateState(sender_psid, new_state){
 
 
 function reset(sender_psid){
-  //To do
+  //TO DO
   console.log("Reset the user state to 0");
 }
 
@@ -229,7 +230,7 @@ function handleAttachments(sender_psid, attachments){
       resp= createResponse(process.env.ERR_MSG);
       callSendAPI(sender_psid, resp);
     }
-    else if (rows[0].state!=1){
+    else if (rows[0].state!='1'){
       resp= createResponse(process.env.ERR_MSG);
       callSendAPI(sender_psid, resp);
     }

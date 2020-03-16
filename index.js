@@ -169,7 +169,7 @@ function getUserState(sender_psid){
     if(rows.length == 0){
       console.log("User not saved, saving new user");
       db.run("INSERT into users (psid,state,quiz_state) VALUES ('"+sender_psid+"','0','0')");
-      db.run("INSERT into contents (psid, content) VALUES ('"+sender_psid+"',''");
+      db.run("INSERT into contents (psid, content) VALUES ('"+sender_psid+"','')");
       greetUser(sender_psid);
     }
     else {

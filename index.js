@@ -6,6 +6,7 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const request = require('request');
 const sqlite3 = require('sqlite3').verbose();
 const image2base64 = require('image-to-base64');
+axios = require('axios');
 
 
 //Start process
@@ -168,6 +169,7 @@ function getUserState(sender_psid){
     if(rows.length == 0){
       console.log("User not saved, saving new user");
       db.run("INSERT into users (psid,state,quiz_state) VALUES ('"+sender_psid+"','0','0')");
+      db.run("INSERT into contents (psid, content) VALUES ('"+sender_psid+"',''");
       greetUser(sender_psid);
     }
     else {
@@ -194,7 +196,7 @@ function createResponse(content){
 function greetUser(sender_psid){
   console.log("Greeting user");
   response = createResponse(process.env.INTRO_TEXT);
-  callSendAPI(sender_psid, response);
+  callSendAPI(sender_psid, response, 1);
 }
 
 //Continuing interaction with old users
@@ -243,16 +245,28 @@ function handleAttachments(sender_psid, attachments){
 }
 
 function convertImage(path){
-  image2base64(path) // you can also to use url
+  image2base64(path) 
   .then(
       (response) => {
-          console.log(response); //cGF0aC90by9maWxlLmpwZw==
+          //console.log(response);
+          saveText(response);
       }
   )
   .catch(
       (error) => {
-          console.log(error); //Exepection error....
+          console.log(error);
       }
   )
+}
+
+function saveText(base64encoding){
+  axios.post('https://apoorvamk.pythonanywhere.com/', {
+    base64encodedimage: base64encoding
+  })
+  .then((response) => {
+    console.log(response);
+  }, (error) => {
+    console.log(error);
+  });
 }
 

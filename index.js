@@ -5,6 +5,7 @@ require('dotenv').config()
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const request = require('request');
 const sqlite3 = require('sqlite3').verbose();
+const image2base64 = require('image-to-base64');
 
 
 //Start process
@@ -236,24 +237,22 @@ function handleAttachments(sender_psid, attachments){
     }
     else{
       console.log(attachments);
-      toDataURL(attachments[0].payload.url, function(dataUrl) {
-        console.log('Result in string:', dataUrl)
-      });
+      convertImage(attachments[0].payload.url);
     }
   });
 }
 
-
-function toDataURL(url, callback) {
-  var httpRequest = new XMLHttpRequest();
-  httpRequest.onload = function() {
-     var fileReader = new FileReader();
-        fileReader.onloadend = function() {
-           callback(fileReader.result);
-        }
-        fileReader.readAsDataURL(httpRequest.response);
-  };
-  httpRequest.open('GET', url);
-  httpRequest.responseType = 'blob';
-  httpRequest.send();
+function convertImage(path){
+  image2base64(path) // you can also to use url
+  .then(
+      (response) => {
+          console.log(response); //cGF0aC90by9maWxlLmpwZw==
+      }
+  )
+  .catch(
+      (error) => {
+          console.log(error); //Exepection error....
+      }
+  )
 }
+

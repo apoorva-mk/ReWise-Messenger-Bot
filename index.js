@@ -244,7 +244,10 @@ function handleAttachments(sender_psid, attachments){
     }
     else{
       console.log(attachments);
-      convertImage(attachments[0].payload.url, sender_psid);
+      var attachment
+      for (attachment of attachments){
+        convertImage(attachment.payload.url, sender_psid);
+      }
     }
   });
 }
@@ -289,6 +292,7 @@ function saveText(base64encoding, sender_psid){
 function continue1(sender_psid, message){
   if(message.text){
     if(message.text=="Hello"){
+      console.log("In state 2");
       updateState(sender_psid, "2");
     }
   }

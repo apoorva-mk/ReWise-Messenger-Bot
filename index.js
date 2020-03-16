@@ -60,7 +60,7 @@ app.post('/webhook', (req, res) => {
             reset(sender_psid);
           }
           else{
-            getUserState(sender_psid);
+            getUserState(sender_psid, webhook_event.message);
           }
         }
 
@@ -153,7 +153,7 @@ function callSendAPI(sender_psid, response, follow_up=0) {
     if (!err) {
       console.log('message sent!')
       if(follow_up == 1){
-        continueInteraction(sender_psid, "0");
+        continueInteraction0(sender_psid, "0");
       }
     } else {
       console.error("Unable to send message:" + err);
@@ -163,7 +163,7 @@ function callSendAPI(sender_psid, response, follow_up=0) {
 }
 
 
-function getUserState(sender_psid){
+function getUserState(sender_psid, message){
   db.all("SELECT * from users where psid='"+sender_psid+"'",function(err,rows){
     console.log(rows);
     if(rows.length == 0){
@@ -175,7 +175,12 @@ function getUserState(sender_psid){
     else {
       console.log("Old user");
       console.log(rows[0].psid+" "+rows[0].state+" "+rows[0].quiz_state);
-      continueInteraction(sender_psid, rows[0].state, 1);
+      if(rows[0].state=="0")
+      continueInteraction0(sender_psid, rows[0].state, 1);
+
+      else if(rows[0].state=="1"){
+        continue1(sender_psid, message);
+      }
     }    
   });
 }
@@ -200,7 +205,7 @@ function greetUser(sender_psid){
 }
 
 //Continuing interaction with old users
-function continueInteraction(sender_psid, state, welcome_flag=0){
+function continueInteraction0(sender_psid, state, welcome_flag=0){
   if(state=='0'){
     console.log("State 0");
     welcome = "";
@@ -271,7 +276,7 @@ function saveText(base64encoding, sender_psid){
         console.log("Some error occurred");
       }
       else{
-        new_content=rows[0].content+" "+response;
+        new_content=rows[0].content+" "+response.data;
         db.run("UPDATE contents SET content='"+new_content+"' where psid='"+sender_psid+"'");
       }
     });
@@ -281,3 +286,10 @@ function saveText(base64encoding, sender_psid){
   });
 }
 
+function continue1(sender_psid, message){
+  if(message.text){
+    if(message.text=="Hello"){
+      updateState(sender_psid, "2");
+    }
+  }
+}

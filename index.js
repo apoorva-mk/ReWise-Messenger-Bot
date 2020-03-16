@@ -506,7 +506,7 @@ function displayReport(sender_psid, score, user_answers){
   var report = "Let's see how you did\n\n---QUIZ REPORT---\n";
   var i;
   for (i = 0; i < user_answers.length; i++) {
-    report+= user_answers[i] + "\n";
+    report+= "Q"+(i+1)+". "+user_answers[i] + "\n";
   } 
 
   report+="Overall Score: "+score+"/"+user_answers.length;

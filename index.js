@@ -475,7 +475,7 @@ function checkAnswer(sender_psid, answer){
     else{
       console.log("Inside checking answers");
       answers = JSON.parse(rows[0].correct_answers);
-      user_answers = JSON.parse(rows[0].users_answers);
+      user_answers = JSON.parse(rows[0].user_answers);
       corr_answer = answers[rows[0].curr_question-1];
       score = rows[0].score;
       if(corr_ans.toUpperCase() === answer.toUpperCase()){

@@ -242,19 +242,24 @@ function reset(sender_psid){
 function handleAttachments(sender_psid, attachments){
   db.all("SELECT * from users where psid='"+sender_psid+"'",function(err,rows){
     console.log(rows);
-    if(rows.length == 0){
-      resp= createResponse(process.env.ERR_MSG);
-      callSendAPI(sender_psid, resp);
-    }
-    else if (rows[0].state!='1'){
-      resp= createResponse(process.env.ERR_MSG);
-      callSendAPI(sender_psid, resp);
+    if (err){
+      console.log(err);
     }
     else{
-      console.log(attachments);
-      var attachment
-      for (attachment of attachments){
-        convertImage(attachment.payload.url, sender_psid);
+      if(rows.length == 0){
+        resp= createResponse(process.env.ERR_MSG);
+        callSendAPI(sender_psid, resp);
+      }
+      else if (rows[0].state!='1'){
+        resp= createResponse(process.env.ERR_MSG);
+        callSendAPI(sender_psid, resp);
+      }
+      else{
+        console.log(attachments);
+        var attachment
+        for (attachment of attachments){
+          convertImage(attachment.payload.url, sender_psid);
+        }
       }
     }
   });

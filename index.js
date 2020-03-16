@@ -7,12 +7,13 @@ const request = require('request');
 const sqlite3 = require('sqlite3').verbose();
 const image2base64 = require('image-to-base64');
 const axios = require('axios');
+var createDoc = require("./createDoc");
+var sendAttachments = require("./mailFile");
 
 
 //Start process
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 file_path = process.env.DB_FILE_NAME
-
 
 //Creating a database and table
 let db = new sqlite3.Database(file_path, (err) => { 
@@ -22,8 +23,9 @@ let db = new sqlite3.Database(file_path, (err) => {
       console.log('Database created!, path: "./mydb.sqlite3"') 
       createTable()
   } 
-})
+});
 
+sendAttachments.sendAttachments("apoorva.mk99@gmail.com");
 
 //creating a table to hold state
 const createTable = () => {
@@ -149,6 +151,7 @@ function handlePostback(sender_psid, received_postback) {
   else{
     console.log("Moving to state 4");
     updateState(sender_psid, "4");
+    generateQuizSheet(sender_psid);
   }
 }
 
@@ -174,12 +177,16 @@ function callSendAPI(sender_psid, response, follow_up=0) {
       if(follow_up == 1){
         continueInteraction0(sender_psid, "0");
       }
-
       else if (follow_up ==2){
         sendButtonMenu(sender_psid);
       }
       else if (follow_up == 3){
         displayQuestion(sender_psid);
+      }
+      else if(follow_up == 4){
+        res = createResponse(process.env.THANK_YOU);
+        callSendAPI(sender_psid, res);
+        reset(sender_psid);
       }
     } else {
       console.error("Unable to send message:" + err);
@@ -214,6 +221,11 @@ function getUserState(sender_psid, message){
       else if(rows[0].state=="3"){
         console.log("Checking the answer sent");
         checkAnswer(sender_psid, message.text);
+      }
+
+      else if(rows[0].state=="5"){
+        console.log("Sending email");
+        sendEmail(message.text);
       }
     }    
   });
@@ -263,6 +275,7 @@ function reset(sender_psid){
   //TO DO
   console.log("Reset the user state to 0");
   updateState(sender_psid, "0");
+
 }
 
 
@@ -510,6 +523,34 @@ function displayReport(sender_psid, score, user_answers){
   } 
 
   report+="Overall Score: "+score+"/"+user_answers.length;
+
   res = createResponse(report);
-  callSendAPI(sender_psid, res);
+  callSendAPI(sender_psid, res, 4);
+}
+
+function generateQuizSheet(sender_psid){
+  console.log("Generating quiz sheet");
+  db.all("SELECT * from questions where psid='"+sender_psid+"'",function(err,rows){
+    console.log(rows);
+    if(rows.length ==0){
+      console.log("Some error in fetching questions and answers");
+    }
+    else{
+      questions = JSON.parse(rows[0].questions);
+      answers = JSON.parse(rows[0].correct_answers);
+      createDoc.createDoc(questions, answers);
+      getEmail(sender_psid);
+      updateState(sender_psid, "5");
+    }
+  });
+}
+
+function getEmail(sender_psid){
+  resp=createResponse("Please provide your email address");
+  callSendAPI(resp);
+}
+
+function sendEmail(email){
+  console.log("Sending files to email address");
+  sendAttachments.sendAttachments(email);
 }

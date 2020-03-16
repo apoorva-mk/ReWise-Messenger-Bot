@@ -272,7 +272,7 @@ function saveText(base64encoding, sender_psid){
       }
       else{
         new_content=rows[0].content+" "+response;
-        db.run("UPDATE contents SET content="+new_content+" where psid='"+sender_psid+"'");
+        db.run("UPDATE contents SET content='"+new_content+"' where psid='"+sender_psid+"'");
       }
     });
 

@@ -424,6 +424,7 @@ function getQuestions(content, sender_psid, follow_up, callback){
       console.log(".....................................................")
       var ques = [];
       var corr_ans = [];
+      var user_ans = [];
       var obj;
       for ( obj of response.data.Data.recall){
         ques.push(obj.Question);
@@ -434,7 +435,7 @@ function getQuestions(content, sender_psid, follow_up, callback){
         }
       }
       console.log(JSON.stringify(ques));
-      db.run("UPDATE questions SET questions='"+JSON.stringify(ques)+"',correct_answers='"+JSON.stringify(corr_ans)+"',total_questions="+ques.length+" where psid='"+sender_psid+"'");
+      db.run("UPDATE questions SET questions='"+JSON.stringify(ques)+"',correct_answers='"+JSON.stringify(corr_ans)+"',user_answers='"+JSON.stringify(user_ans)+"',total_questions="+ques.length+" where psid='"+sender_psid+"'");
       res = createResponse(process.env.WAIT);
       callback(sender_psid, res, follow_up);
 

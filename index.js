@@ -493,11 +493,23 @@ function checkAnswer(sender_psid, answer){
       if(rows[0].curr_question > rows[0].total_questions){
         displayReport(sender_psid, score, user_answers);
       }
-      displayQuestion(sender_psid);
+      else{
+        displayQuestion(sender_psid);
+      }
+      
     }
   });
 }
 
 function displayReport(sender_psid, score, user_answers){
   console.log("Display the user quiz report");
+  var report = "Let's see how you did\n\n---QUIZ REPORT---\n";
+  var i;
+  for (i = 0; i < user_answers.length; i++) {
+    report+= user_answers[i] + "\n";
+  } 
+
+  report+="Overall Score: "+score+"/"+user_answers.length;
+  res = createResponse(report);
+  callSendAPI(sender_psid, res);
 }

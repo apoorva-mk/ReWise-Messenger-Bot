@@ -490,7 +490,7 @@ function checkAnswer(sender_psid, answer){
         console.log("Incorrect answer");
       }
       db.run("UPDATE questions SET score="+score+", user_answers='"+JSON.stringify(user_answers)+"' where psid='"+sender_psid+"'");
-      if(rows[0].curr_question > rows[0].total_questions){
+      if(rows[0].curr_question == rows[0].total_questions){
         displayReport(sender_psid, score, user_answers);
       }
       else{

@@ -473,6 +473,7 @@ function checkAnswer(sender_psid, answer){
       console.log("Some error occurred while fetching question number to check answer");
     }
     else{
+      console.log("Inside checking answers");
       answers = JSON.parse(rows[0].correct_answers);
       user_answers = JSON.parse(rows[0].users_answers);
       corr_answer = answers[rows[0].curr_question-1];

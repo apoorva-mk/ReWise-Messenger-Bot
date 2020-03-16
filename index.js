@@ -398,14 +398,20 @@ function sendButtonMenu(sender_psid){
 
 function getQuestions(content, sender_psid, follow_up, callback){
   console.log("Generating questions");
-  var config = {
-      headers: {
-          'Content-Type': 'text/plain',
-          'Authorization': `Basic ${process.env.AUTH_TOKEN}`
-      },
-    responseType: 'json'
-  };
-  axios.post(process.env.QUIZ_URL, content, config)
+  // var config = {
+  //     headers: {
+  //         'Content-Type': 'text/plain',
+  //         'Authorization': `Basic ${process.env.AUTH_TOKEN}`
+  //     },
+  //   responseType: 'json'
+  // };
+  const headers= {
+    'Content-Type': 'text/plain',
+    'Authorization': `Basic ${process.env.AUTH_TOKEN}`
+  }
+  axios.post(process.env.QUIZ_URL, content, { 
+    headers: headers
+  })
   .then(function(response) {
       console.log(response);
       res = createResponse(process.env.WAIT);
@@ -416,5 +422,4 @@ function getQuestions(content, sender_psid, follow_up, callback){
       callback(sender_psid, res);
       console.log(error);
   });
-    
 }

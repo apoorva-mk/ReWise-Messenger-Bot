@@ -365,4 +365,17 @@ function sendButtonMenu(sender_psid){
       }
     }
   }
+
+  request({
+    "uri": "https://graph.facebook.com/v2.6/me/messages",
+    "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
+    "method": "POST",
+    "json": response
+  }, (err, res, body) => {
+    if (!err) {
+      console.log('Buttons sent!')
+    } else {
+      console.error("Unable to send message:" + err);
+    }
+  }); 
 }

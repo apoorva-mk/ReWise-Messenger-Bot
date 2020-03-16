@@ -447,6 +447,8 @@ function displayQuestion(sender_psid){
     }
     else{
       console.log("Ready to display question ", rows[0].curr_question);
+      questions = JSON.parse(rows[0].questions);
+      resp=createResponse("Question "+(rows[0].curr_question+1)+":\n"+questions[rows[0].curr_question]);
     }
   });
 }

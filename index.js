@@ -474,24 +474,24 @@ function checkAnswer(sender_psid, answer){
     }
     else{
       console.log("Inside checking answers");
-      answers = JSON.parse(rows[0].correct_answers);
-      user_answers = JSON.parse(rows[0].user_answers);
-      corr_answer = answers[rows[0].curr_question-1];
-      score = rows[0].score;
-      console.log("Going to check answer");
-      if(corr_ans.toUpperCase() === answer.toUpperCase()){
-        user_answers.push("Correct");
-        score = score+1;
-        console.log("Correct answer");
-      }
-      else{
-        user_answers.push("Incorrect --> "+corr_ans);
-        console.log("Incorrect answer");
-      }
-      db.run("UPDATE questions SET score="+score+", user_answers='"+JSON.stringify(user_answers)+"' where psid='"+sender_psid+"'");
-      if(rows[0].curr_question > rows[0].total_questions){
-        displayReport(sender_psid, score, user_answers);
-      }
+      // answers = JSON.parse(rows[0].correct_answers);
+      // user_answers = JSON.parse(rows[0].user_answers);
+      // corr_answer = answers[rows[0].curr_question-1];
+      // score = rows[0].score;
+      // console.log("Going to check answer");
+      // if(corr_ans.toUpperCase() === answer.toUpperCase()){
+      //   user_answers.push("Correct");
+      //   score = score+1;
+      //   console.log("Correct answer");
+      // }
+      // else{
+      //   user_answers.push("Incorrect --> "+corr_ans);
+      //   console.log("Incorrect answer");
+      // }
+      // db.run("UPDATE questions SET score="+score+", user_answers='"+JSON.stringify(user_answers)+"' where psid='"+sender_psid+"'");
+      // if(rows[0].curr_question > rows[0].total_questions){
+      //   displayReport(sender_psid, score, user_answers);
+      // }
       displayQuestion(sender_psid);
     }
   });

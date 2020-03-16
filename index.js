@@ -67,7 +67,7 @@ app.post('/webhook', (req, res) => {
       if(webhook_event.message.attachments){
         console.log(webhook_event.message.attachments);
         console.log(webhook_event.message.attachments[0].payload.sticker_id);
-        if(webhook_event.message.attachments[0].payload.sticker_id){
+        if(webhook_event.message.attachments[0].payload.sticker_id == 369239263222822){
           continue1(sender_psid, webhook_event.message);
         }
         else{

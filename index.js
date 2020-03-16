@@ -236,6 +236,24 @@ function handleAttachments(sender_psid, attachments){
     }
     else{
       console.log(attachments);
-    }    
+      toDataURL(attachments[0].payload.url, function(dataUrl) {
+        console.log('Result in string:', dataUrl)
+      });
+    }
   });
+}
+
+
+function toDataURL(url, callback) {
+  var httpRequest = new XMLHttpRequest();
+  httpRequest.onload = function() {
+     var fileReader = new FileReader();
+        fileReader.onloadend = function() {
+           callback(fileReader.result);
+        }
+        fileReader.readAsDataURL(httpRequest.response);
+  };
+  httpRequest.open('GET', url);
+  httpRequest.responseType = 'blob';
+  httpRequest.send();
 }

@@ -407,7 +407,7 @@ function getQuestions(content, sender_psid, follow_up, callback){
   // };
   const headers= {
     'Content-Type': 'text/plain',
-    'Authorization': `Basic ${process.env.AUTH_TOKEN}`
+    'Authorization': `Bearer ${process.env.AUTH_TOKEN}`
   }
   axios.post(process.env.QUIZ_URL, content, { 
     headers: headers

@@ -65,7 +65,7 @@ app.post('/webhook', (req, res) => {
         }
 
       if(webhook_event.message.attachments){
-        if(webhook_event.attachments[0].payload.sticker_id)
+        if(webhook_event.message.attachments[0].payload.sticker_id)
         continue1(sender_psid, webhook_event.message);
         else{
           handleAttachments(sender_psid, webhook_event.message.attachments);

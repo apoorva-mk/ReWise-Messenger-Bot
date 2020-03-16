@@ -488,9 +488,9 @@ function checkAnswer(sender_psid, answer){
       if(rows[0].curr_question > rows[0].total_questions){
         displayReport(sender_psid, score, user_answers);
       }
+      displayQuestion(sender_psid);
     }
   });
-  displayQuestion(sender_psid);
 }
 
 function displayReport(sender_psid, score, user_answers){

@@ -554,5 +554,5 @@ function sendEmail(sender_id, email){
   console.log("Sending files to email address");
   sendAttachments.sendAttachments(email);
   resp=createResponse("The files have been sent to your email address");
-  callSendAPI(sender_id, resp)
+  callSendAPI(sender_id, resp, 4);
 }

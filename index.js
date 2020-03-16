@@ -425,7 +425,7 @@ function getQuestions(content, sender_psid, follow_up, callback){
         corr_ans.push(obj.Answer);
       }
       console.log(JSON.stringify(ques));
-      db.run("UPDATE questions SET questions='"+JSON.stringify(ques)+"',correct_answers="+JSON.stringify(corr_ans)+",total_questions="+ques.length+" where psid='"+sender_psid+"'");
+      db.run("UPDATE questions SET questions='"+JSON.stringify(ques)+"',correct_answers='"+JSON.stringify(corr_ans)+"',total_questions="+ques.length+" where psid='"+sender_psid+"'");
       res = createResponse(process.env.WAIT);
       callback(sender_psid, res, follow_up);
 
@@ -449,5 +449,4 @@ function displayQuestion(sender_psid){
       console.log("Ready to display question ", rows[0].curr_question);
     }
   });
-
 }

@@ -396,7 +396,7 @@ function sendButtonMenu(sender_psid){
   }); 
 }
 
-function getQuestions(content, psid, follow_up, callback){
+function getQuestions(content, sender_psid, follow_up, callback){
   console.log("Generating questions");
   var config = {
       headers: {

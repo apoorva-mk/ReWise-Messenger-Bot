@@ -6,7 +6,7 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const request = require('request');
 const sqlite3 = require('sqlite3').verbose();
 const image2base64 = require('image-to-base64');
-axios = require('axios');
+const axios = require('axios');
 
 
 //Start process
@@ -264,7 +264,7 @@ function saveText(base64encoding, sender_psid){
     base64encodedimage: base64encoding
   })
   .then((response) => {
-    console.log(response);
+    console.log(response.data);
     db.all("SELECT * from contents where psid='"+sender_psid+"'",function(err,rows){
       console.log(rows);
       if(rows.length==0){

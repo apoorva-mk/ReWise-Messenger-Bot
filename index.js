@@ -420,7 +420,7 @@ function getQuestions(content, sender_psid, follow_up, callback){
         ques.push(obj.Question);
         corr_ans.push(obj.Answer);
       }
-      console.log(ques,corr_ans, ques.stringify(), ques.stringify().parse());
+      console.log(ques,corr_ans, JSON.stringify(ques));
       res = createResponse(process.env.WAIT);
       callback(sender_psid, res, follow_up);
 

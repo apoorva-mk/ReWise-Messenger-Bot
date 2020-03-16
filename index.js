@@ -478,6 +478,7 @@ function checkAnswer(sender_psid, answer){
       user_answers = JSON.parse(rows[0].user_answers);
       corr_answer = answers[rows[0].curr_question-1];
       score = rows[0].score;
+      console.log("Going to check answer");
       if(corr_ans.toUpperCase() === answer.toUpperCase()){
         user_answers.push("Correct");
         score = score+1;

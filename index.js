@@ -30,6 +30,7 @@ const createTable = () => {
   console.log("Create table 'users' and 'content' in database");
   db.run("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, psid TEXT, state TEXT, quiz_state TEXT)");
   db.run("CREATE TABLE IF NOT EXISTS contents(id INTEGER PRIMARY KEY AUTOINCREMENT, psid TEXT, content TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS questions(id INTEGER PRIMARY KEY AUTOINCREMENT, psid TEXT, curr_question INTEGER, questions TEXT, correct_answers TEXT, user_answers TEXT, total_questions INTEGER, score INTEGER)")
 }
 
 app.post('/webhook', (req, res) => {  
@@ -191,6 +192,7 @@ function getUserState(sender_psid, message){
       console.log("User not saved, saving new user");
       db.run("INSERT into users (psid,state,quiz_state) VALUES ('"+sender_psid+"','0','0')");
       db.run("INSERT into contents (psid, content) VALUES ('"+sender_psid+"','')");
+      db.run("INSERT into questions (psid, curr_question, questions, correct_answers, user_answers, total_questions, score) VALUES ('"+sender_psid+"',0,'','','',0,0");
       greetUser(sender_psid);
     }
     else {
@@ -398,13 +400,6 @@ function sendButtonMenu(sender_psid){
 
 function getQuestions(content, sender_psid, follow_up, callback){
   console.log("Generating questions");
-  // var config = {
-  //     headers: {
-  //         'Content-Type': 'text/plain',
-  //         'Authorization': `Basic ${process.env.AUTH_TOKEN}`
-  //     },
-  //   responseType: 'json'
-  // };
   const headers= {
     'Content-Type': 'text/plain',
     'Authorization': `Bearer ${process.env.AUTH_TOKEN}`
@@ -416,8 +411,18 @@ function getQuestions(content, sender_psid, follow_up, callback){
       console.log(".....................................................");
       console.log(response.data.Data);
       console.log(".....................................................")
+      var ques = [];
+      var corr_ans = []
+      var user_ans = [];
+      var obj;
+      for ( obj of response.data.Data.recall){
+        ques.push(obj.Question);
+        corr_ans.push(obj.Answer);
+      }
+      console.log(ques,corr_ans, ques.stringify(), ques.stringify().parse());
       res = createResponse(process.env.WAIT);
       callback(sender_psid, res, follow_up);
+
   })
   .catch(function(error) {
       res = createResponse(process.env.ERR_Q);

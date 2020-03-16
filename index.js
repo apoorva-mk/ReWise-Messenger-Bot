@@ -414,7 +414,7 @@ function getQuestions(content, sender_psid, follow_up, callback){
   })
   .then(function(response) {
       console.log(".....................................................");
-      console.log(response);
+      console.log(response.data.Data);
       console.log(".....................................................")
       res = createResponse(process.env.WAIT);
       callback(sender_psid, res, follow_up);

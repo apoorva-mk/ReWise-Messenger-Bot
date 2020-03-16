@@ -298,5 +298,63 @@ function saveText(base64encoding, sender_psid){
 }
 
 function continue1(sender_psid, message){
-  console.log("Moving to state 2");
+
+  //console.log("Moving to state 2");
+  db.all("SELECT * from contents where psid='"+sender_psid+"'",function(err,rows){
+    console.log(rows);
+    if(rows.length==0){
+      console.log("Some error occurred while trying to fetch stored content");
+    }
+    else{
+      new_content=rows[0].content;
+      words = wordCount(new_content);
+      if(words<300){
+        resp = createResponse(process.env.NOT_ENOUGH);
+        callSendAPI(sender_psid, resp);
+      }
+      else{
+        console.log("Creating quiz");
+        updateState(sender_psid, "2");
+        sendButtonMenu(sender_psid);
+      }
+    }
+  });
+
+}
+
+function wordCount(content){
+  str = content;
+  str = str.replace(/(^\s*)|(\s*$)/gi,"");
+  str = str.replace(/[ ]{2,}/gi," ");
+  str = str.replace(/\n /,"\n");
+  return str.split(' ').length;
+}
+
+function sendButtonMenu(sender_psid){
+  response = {
+    "recipient":{
+      "id":sender_psid
+    },
+    "message":{
+      "attachment":{
+        "type":"template",
+        "payload":{
+          "template_type":"button",
+          "text":"What do you want to do next?",
+          "buttons":[
+            {
+              "type":"postback",
+              "title":"Take quiz now.",
+              "payload":"3"
+            },
+            {
+              "type":"postback",
+              "title":"Send generated quiz.",
+              "payload":"4"
+            }
+          ]
+        }
+      }
+    }
+  }
 }

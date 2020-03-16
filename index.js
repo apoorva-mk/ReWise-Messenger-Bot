@@ -294,6 +294,7 @@ function saveText(base64encoding, sender_psid){
       else{
         console.log("Appending more content");
         new_content=rows[0].content+" "+response.data;
+        console.log(new_content);
         db.run("UPDATE contents SET content='"+new_content+"' where psid='"+sender_psid+"'");
       }
     });

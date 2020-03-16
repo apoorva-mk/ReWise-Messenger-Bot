@@ -203,11 +203,17 @@ function getUserState(sender_psid, message){
     else {
       console.log("Old user");
       console.log(rows[0].psid+" "+rows[0].state+" "+rows[0].quiz_state);
+
       if(rows[0].state=="0")
       continueInteraction0(sender_psid, rows[0].state, 1);
 
       else if(rows[0].state=="1"){
         continue1(sender_psid, message);
+      }
+
+      else if(rows[0].state=="3"){
+        console.log("Checking the answer sent");
+        checkAnswer(sender_psid, message.text);
       }
     }    
   });
@@ -423,6 +429,10 @@ function getQuestions(content, sender_psid, follow_up, callback){
       for ( obj of response.data.Data.recall){
         ques.push(obj.Question);
         corr_ans.push(obj.Answer);
+
+        if(ques.len==5){
+          break;
+        }
       }
       console.log(JSON.stringify(ques));
       db.run("UPDATE questions SET questions='"+JSON.stringify(ques)+"',correct_answers='"+JSON.stringify(corr_ans)+"',total_questions="+ques.length+" where psid='"+sender_psid+"'");
@@ -450,6 +460,39 @@ function displayQuestion(sender_psid){
       questions = JSON.parse(rows[0].questions);
       resp=createResponse("Question "+(rows[0].curr_question+1)+":\n"+questions[rows[0].curr_question]);
       callSendAPI(sender_psid, resp);
+      db.run("UPDATE questions SET curr_question="+(rows[0].curr_question+1)+" where psid='"+sender_psid+"'");
     }
   });
+}
+
+function checkAnswer(sender_psid, answer){
+  console.log(answer);
+  db.all("SELECT * from questions where psid='"+sender_psid+"'",function(err,rows){
+    console.log(rows);
+    if(rows.length==0){
+      console.log("Some error occurred while fetching question number to check answer");
+    }
+    else{
+      answers = JSON.parse(rows[0].correct_answers);
+      user_answers = JSON.parse(rows[0].users_answers);
+      corr_answer = answers[rows[0].curr_question-1];
+      score = rows[0].score;
+      if(corr_ans.toUpperCase() === answer.toUpperCase()){
+        user_answers.push("Correct");
+        score = score+1;
+      }
+      else{
+        user_answers.push("Incorrect --> "+corr_ans);
+      }
+      db.run("UPDATE questions SET score="+score+", user_answers='"+JSON.stringify(user_answers)+"'where psid='"+sender_psid+"'");
+      if(rows[0].curr_question > rows[0].total_questions){
+        displayReport(sender_psid, score, user_answers);
+      }
+    }
+  });
+  displayQuestion(sender_psid);
+}
+
+function displayReport(sender_psid, score, user_answers){
+  console.log("Display the user quiz report");
 }

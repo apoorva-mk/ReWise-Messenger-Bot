@@ -239,17 +239,17 @@ function handleAttachments(sender_psid, attachments){
     }
     else{
       console.log(attachments);
-      convertImage(attachments[0].payload.url);
+      convertImage(attachments[0].payload.url, sender_psid);
     }
   });
 }
 
-function convertImage(path){
+function convertImage(path, sender_psid){
   image2base64(path) 
   .then(
       (response) => {
           //console.log(response);
-          saveText(response);
+          saveText(response, sender_psid);
       }
   )
   .catch(
@@ -259,12 +259,23 @@ function convertImage(path){
   )
 }
 
-function saveText(base64encoding){
+function saveText(base64encoding, sender_psid){
   axios.post('https://apoorvamk.pythonanywhere.com/', {
     base64encodedimage: base64encoding
   })
   .then((response) => {
     console.log(response);
+    db.all("SELECT * from contents where psid='"+sender_psid+"'",function(err,rows){
+      console.log(rows);
+      if(rows.length==0){
+        console.log("Some error occurred");
+      }
+      else{
+        new_content=rows[0].content+" "+response;
+        db.run("UPDATE contents SET content="+new_content+" where psid='"+sender_psid+"'");
+      }
+    });
+
   }, (error) => {
     console.log(error);
   });
